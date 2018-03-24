@@ -1,0 +1,758 @@
+<?xml version="1.0" encoding="UTF-8"?><driver-configuration config-type="ScriptPolicyImpl" dn="cn=JSONlib-tests,cn=Library,cn=driverset1,o=system" driver-set-dn="cn=driverset1,o=system" name="JSONlib-tests">
+	<children>
+		<rule name="JSONlib-tests">
+			<policy>
+				<rule>
+					<description>instanceXMLtoJSON test 001</description>
+					<comment xml:space="preserve">Instance XML taken from https://www.netiq.com/documentation/identity-manager-developer/dtd-documentation/ndsdtd/instance.html , value nodes are missing the @type portion.
+The XML Parse token generates a root #document node so it requires special treatment on the code to parse.</comment>
+					<conditions>
+						<and/>
+					</conditions>
+					<actions>
+						<do-set-local-variable name="var_instancexml" notrace="true" scope="policy">
+							<arg-node-set>
+								<token-xml-parse>
+									<token-text xml:space="preserve">&lt;instance class-name="User" src-dn="\Users\Samuel">
+ &lt;association>1012&lt;/association>
+ &lt;attr attr-name="Surname">
+  &lt;value>Jones&lt;/value>
+ &lt;/attr>
+ &lt;attr attr-name="cn">
+  &lt;value>Samuel&lt;/value>
+ &lt;/attr>
+ &lt;attr attr-name="Given Name">
+  &lt;value>Samuel&lt;/value>
+ &lt;/attr>
+ &lt;attr attr-name="Telephone Number">
+  &lt;value>555-1212&lt;/value>
+  &lt;value>555-1764&lt;/value>
+ &lt;/attr>
+&lt;/instance></token-text>
+								</token-xml-parse>
+							</arg-node-set>
+						</do-set-local-variable>
+						<do-trace-message disabled="true" level="0" notrace="true">
+							<arg-string>
+								<token-text xml:space="preserve">
+--- Expected result:
+{"Surname":"Jones","cn":"Samuel","Given Name":"Samuel","Telephone Number":["555-1212","555-1764"]}</token-text>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:instanceXMLtoJSON( $var_instancexml )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message disabled="true" level="0" notrace="true">
+							<arg-string>
+								<token-text xml:space="preserve">
+--- Expected result:
+{"Surname":"Jones","cn":"Samuel","Given Name":"Samuel","Telephone Number":["555-1212","555-1764"]}</token-text>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:instanceXMLtoJSON( $var_instancexml, 'serialized' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message disabled="true" level="0" notrace="true">
+							<arg-string>
+								<token-text xml:space="preserve">
+--- Expected result:
+com.novell.xsl.extensions.JavaObject@&lt;hex>
+where &lt;hex> is a hexadecimal value of at least 8 characters.</token-text>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:instanceXMLtoJSON( $var_instancexml, 'object' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message disabled="true" level="0" notrace="true">
+							<arg-string>
+								<token-text xml:space="preserve">
+--- Expected result:
+{"Surname":"Jones","cn":"Samuel","Given Name":"Samuel","Telephone Number":["555-1212","555-1764"]}</token-text>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:instanceXMLtoJSON( $var_instancexml, 100 )"/>
+							</arg-string>
+						</do-trace-message>
+					</actions>
+				</rule>
+				<rule>
+					<description>instanceXMLtoJSON test 002</description>
+					<comment xml:space="preserve">Instance XML taken from https://www.netiq.com/documentation/identity-manager-developer/dtd-documentation/ndsdtd/instance.html , value nodes are missing the @type portion.
+Variable being re-set a level lower like we would see as the return of a query token.</comment>
+					<conditions>
+						<and/>
+					</conditions>
+					<actions>
+						<do-set-local-variable name="var_instancexml" notrace="true" scope="policy">
+							<arg-node-set>
+								<token-xml-parse>
+									<token-text xml:space="preserve">&lt;instance class-name="User" src-dn="\Users\Samuel">
+ &lt;association>1012&lt;/association>
+ &lt;attr attr-name="Surname">
+  &lt;value>Jones&lt;/value>
+ &lt;/attr>
+ &lt;attr attr-name="cn">
+  &lt;value>Samuel&lt;/value>
+ &lt;/attr>
+ &lt;attr attr-name="Given Name">
+  &lt;value>Samuel&lt;/value>
+ &lt;/attr>
+ &lt;attr attr-name="Telephone Number">
+  &lt;value>555-1212&lt;/value>
+  &lt;value>555-1764&lt;/value>
+ &lt;/attr>
+&lt;/instance></token-text>
+								</token-xml-parse>
+							</arg-node-set>
+						</do-set-local-variable>
+						<do-set-local-variable name="var_instancexml" scope="policy">
+							<arg-node-set>
+								<token-xpath expression="$var_instancexml/instance"/>
+							</arg-node-set>
+						</do-set-local-variable>
+						<do-trace-message disabled="true" level="0" notrace="true">
+							<arg-string>
+								<token-text xml:space="preserve">
+--- Expected result:
+{"Surname":"Jones","cn":"Samuel","Given Name":"Samuel","Telephone Number":["555-1212","555-1764"]}</token-text>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:instanceXMLtoJSON( $var_instancexml )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message disabled="true" level="0" notrace="true">
+							<arg-string>
+								<token-text xml:space="preserve">
+--- Expected result:
+{"Surname":"Jones","cn":"Samuel","Given Name":"Samuel","Telephone Number":["555-1212","555-1764"]}</token-text>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:instanceXMLtoJSON( $var_instancexml, 'serialized' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message disabled="true" level="0" notrace="true">
+							<arg-string>
+								<token-text xml:space="preserve">
+--- Expected result:
+com.novell.xsl.extensions.JavaObject@&lt;hex>
+where &lt;hex> is a hexadecimal value of at least 8 characters.</token-text>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:instanceXMLtoJSON( $var_instancexml, 'object' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message disabled="true" level="0" notrace="true">
+							<arg-string>
+								<token-text xml:space="preserve">
+--- Expected result:
+{"Surname":"Jones","cn":"Samuel","Given Name":"Samuel","Telephone Number":["555-1212","555-1764"]}</token-text>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:instanceXMLtoJSON( $var_instancexml, 100 )"/>
+							</arg-string>
+						</do-trace-message>
+					</actions>
+				</rule>
+				<rule>
+					<description>instanceXMLtoJSON test 003</description>
+					<comment xml:space="preserve">Instance XML taken from https://www.netiq.com/documentation/identity-manager-developer/dtd-documentation/ndsdtd/instance.html , value nodes are missing the @type portion.
+Both sets of tests above with mixed case XML elements. NDS DTD specifies that the elements should be lower case, so this scenario should fail.</comment>
+					<conditions>
+						<and/>
+					</conditions>
+					<actions>
+						<do-set-local-variable name="var_instancexml" notrace="true" scope="policy">
+							<arg-node-set>
+								<token-xml-parse>
+									<token-text xml:space="preserve">&lt;INSTANCE class-name="User" src-dn="\Users\Samuel">
+ &lt;association>1012&lt;/association>
+ &lt;ATTR attr-name="Surname">
+  &lt;value>Jones&lt;/value>
+ &lt;/ATTR>
+ &lt;attr attr-name="cn">
+  &lt;value>Samuel&lt;/value>
+ &lt;/attr>
+ &lt;attr attr-name="Given Name">
+  &lt;value>Samuel&lt;/value>
+ &lt;/attr>
+ &lt;attr attr-name="Telephone Number">
+  &lt;value>555-1212&lt;/value>
+  &lt;value>555-1764&lt;/value>
+ &lt;/attr>
+&lt;/INSTANCE></token-text>
+								</token-xml-parse>
+							</arg-node-set>
+						</do-set-local-variable>
+						<do-trace-message disabled="true" level="0" notrace="true">
+							<arg-string>
+								<token-text xml:space="preserve">
+--- Expected result:
+Nodeset passed does not have a root &lt;instance> element with one or more child &lt;attr> nodes.</token-text>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:instanceXMLtoJSON( $var_instancexml )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message disabled="true" level="0" notrace="true">
+							<arg-string>
+								<token-text xml:space="preserve">
+--- Expected result:
+Nodeset passed does not have a root &lt;instance> element with one or more child &lt;attr> nodes.</token-text>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:instanceXMLtoJSON( $var_instancexml, 'serialized' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message disabled="true" level="0" notrace="true">
+							<arg-string>
+								<token-text xml:space="preserve">
+--- Expected result:
+Nodeset passed does not have a root &lt;instance> element with one or more child &lt;attr> nodes.</token-text>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:instanceXMLtoJSON( $var_instancexml, 'object' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message disabled="true" level="0" notrace="true">
+							<arg-string>
+								<token-text xml:space="preserve">
+--- Expected result:
+Nodeset passed does not have a root &lt;instance> element with one or more child &lt;attr> nodes.</token-text>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:instanceXMLtoJSON( $var_instancexml, 100 )"/>
+							</arg-string>
+						</do-trace-message>
+					</actions>
+				</rule>
+				<rule>
+					<description>instanceXMLtoJSON test 004</description>
+					<comment xml:space="preserve">Instance XML taken from https://www.netiq.com/documentation/identity-manager-developer/dtd-documentation/ndsdtd/instance.html , value nodes are missing the @type portion.
+The variable is being set to a myriad of invalid XML (from the standpoint of this code), so all the scenarios should result in error messages.</comment>
+					<conditions>
+						<and/>
+					</conditions>
+					<actions>
+						<do-set-local-variable name="var_instancexml" scope="policy">
+							<arg-node-set/>
+						</do-set-local-variable>
+						<do-trace-message disabled="true" level="0" notrace="true">
+							<arg-string>
+								<token-text xml:space="preserve">
+--- Expected result:
+Error: Could not get the first child node of the parameter passed.</token-text>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:instanceXMLtoJSON( $var_instancexml )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-set-local-variable name="var_instancexml" scope="policy">
+							<arg-node-set>
+								<token-xml-parse>
+									<token-text xml:space="preserve">&lt;root/></token-text>
+								</token-xml-parse>
+							</arg-node-set>
+						</do-set-local-variable>
+						<do-trace-message disabled="true" level="0" notrace="true">
+							<arg-string>
+								<token-text xml:space="preserve">
+--- Expected result:
+Nodeset passed does not have a root &lt;instance> element with one or more child &lt;attr> nodes.</token-text>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:instanceXMLtoJSON( $var_instancexml )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-strip-xpath expression="$var_instancexml/root"/>
+						<do-trace-message disabled="true" level="0" notrace="true">
+							<arg-string>
+								<token-text xml:space="preserve">
+--- Expected result:
+Nodeset passed does not have a root &lt;instance> element with one or more child &lt;attr> nodes.</token-text>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:instanceXMLtoJSON( $var_instancexml )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-set-local-variable name="var_instancexml" notrace="true" scope="policy">
+							<arg-node-set>
+								<token-xml-parse>
+									<token-text xml:space="preserve">&lt;instance class-name="User" src-dn="\Users\Samuel">
+ &lt;association>1012&lt;/association>
+&lt;/instance></token-text>
+								</token-xml-parse>
+							</arg-node-set>
+						</do-set-local-variable>
+						<do-trace-message disabled="true" level="0" notrace="true">
+							<arg-string>
+								<token-text xml:space="preserve">
+--- Expected result:
+Nodeset passed does not have a root &lt;instance> element with one or more child &lt;attr> nodes.</token-text>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:instanceXMLtoJSON( $var_instancexml )"/>
+							</arg-string>
+						</do-trace-message>
+					</actions>
+				</rule>
+				<rule>
+					<description>JSONparse JSONstringify tests</description>
+					<conditions>
+						<and/>
+					</conditions>
+					<actions>
+						<do-set-local-variable name="var_parse" scope="policy">
+							<arg-object>
+								<token-xpath expression="es:JSONparse( &apos;{&quot;result&quot;:{&quot;ReturnCode&quot;:&quot;SUCCESS&quot;,&quot;Message&quot;:&quot;Request Item Created Successfully&quot;,&quot;RequestNumber&quot;:&quot;REQ0058902&quot;,&quot;RequestItemNumber&quot;:&quot;RITM0059000&quot;,&quot;ADHRequestNumber&quot;:&quot;e829f03052a042cc903a2dbf6f4a042f&quot;}}&apos; )"/>
+							</arg-object>
+						</do-set-local-variable>
+						<do-set-local-variable name="var_stringify" scope="policy">
+							<arg-string>
+								<token-xpath expression="es:JSONstringify( $var_parse )"/>
+							</arg-string>
+						</do-set-local-variable>
+					</actions>
+				</rule>
+				<rule>
+					<description>JSONget tests</description>
+					<comment xml:space="preserve">Requires JSONparse() to work for these tests to be valid.
+
+Sample JSON taken from https://adobe.github.io/Spry/samples/data_region/JSONDataSetSample.html .</comment>
+					<conditions>
+						<and/>
+					</conditions>
+					<actions>
+						<do-set-local-variable name="var_jsonstring" notrace="true" scope="policy">
+							<arg-string>
+								<token-text xml:space="preserve">{
+	"id": "0001",
+	"type": "donut",
+	"name": "Cake",
+	"ppu": 0.55,
+	"batters":
+		{
+			"batter":
+				[
+					{ "id": "1001", "type": "Regular" },
+					{ "id": "1002", "type": "Chocolate" },
+					{ "id": "1003", "type": "Blueberry" },
+					{ "id": "1004", "type": "Devil's Food" }
+				]
+		},
+	"topping":
+		[
+			{ "id": "5001", "type": "None" },
+			{ "id": "5002", "type": "Glazed" },
+			{ "id": "5005", "type": "Sugar" },
+			{ "id": "5007", "type": "Powdered Sugar" },
+			{ "id": "5006", "type": "Chocolate with Sprinkles" },
+			{ "id": "5003", "type": "Chocolate" },
+			{ "id": "5004", "type": "Maple" }
+		]
+}</token-text>
+							</arg-string>
+						</do-set-local-variable>
+						<do-set-local-variable name="var_JSONobj" scope="policy">
+							<arg-object>
+								<token-xpath expression="es:JSONparse( $var_jsonstring )"/>
+							</arg-object>
+						</do-set-local-variable>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONget( $var_JSONobj, 'id' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONget( $var_JSONobj, 'type' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONget( $var_JSONobj, 'name' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONget( $var_JSONobj, 'ppu' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONget( $var_JSONobj, 'batters.batter' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONget( $var_JSONobj, 'topping' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONget( $var_JSONobj, 'batters.batter[ 2 ].type' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONget( $var_JSONobj, &apos;batters[&quot;batter&quot;][ 2 ].type&apos; )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONget( $var_JSONobj, &apos;batters[ &quot;batter&quot;][ 2 ].type&apos; )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONget( $var_JSONobj, &apos;batters[&quot;batter&quot; ][ 2 ].type&apos; )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONget( $var_JSONobj, &apos;batters[   &quot;batter&quot;  ][ 2 ].type&apos; )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONget( $var_JSONobj, 'batters.batter[3].id' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONget( $var_JSONobj, 'topping[1].id' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONget( $var_JSONobj, 'topping[   2   ].type' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONget( $var_JSONobj, 'topping[4 ]' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONget( $var_jsonstring, 'topping[ 5].type' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-set-local-variable name="var_JSONobj_topping" scope="policy">
+							<arg-object>
+								<token-xpath expression="es:JSONget( $var_jsonstring, 'topping' )"/>
+							</arg-object>
+						</do-set-local-variable>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONstringify( es:JSONget( $var_JSONobj_topping, '[3]' ) )"/>
+							</arg-string>
+						</do-trace-message>
+					</actions>
+				</rule>
+				<rule>
+					<description>JSONtest tests</description>
+					<comment xml:space="preserve">Requires JSONparse() to work for these tests to be valid.
+
+Sample JSON taken from https://adobe.github.io/Spry/samples/data_region/JSONDataSetSample.html .</comment>
+					<conditions>
+						<and/>
+					</conditions>
+					<actions>
+						<do-set-local-variable name="var_jsonstring" notrace="true" scope="policy">
+							<arg-string>
+								<token-text xml:space="preserve">{
+	"id": "0001",
+	"type": "donut",
+	"name": "Cake",
+	"ppu": 0.55,
+	"batters":
+		{
+			"batter":
+				[
+					{ "id": "1001", "type": "Regular" },
+					{ "id": "1002", "type": "Chocolate" },
+					{ "id": "1003", "type": "Blueberry" },
+					{ "id": "1004", "type": "Devil's Food" }
+				]
+		},
+	"topping":
+		[
+			{ "id": "5001", "type": "None" },
+			{ "id": "5002", "type": "Glazed" },
+			{ "id": "5005", "type": "Sugar" },
+			{ "id": "5007", "type": "Powdered Sugar" },
+			{ "id": "5006", "type": "Chocolate with Sprinkles" },
+			{ "id": "5003", "type": "Chocolate" },
+			{ "id": "5004", "type": "Maple" }
+		]
+}</token-text>
+							</arg-string>
+						</do-set-local-variable>
+						<do-set-local-variable name="var_JSONobj" scope="policy">
+							<arg-object>
+								<token-xpath expression="es:JSONparse( $var_jsonstring )"/>
+							</arg-object>
+						</do-set-local-variable>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONtest( $var_JSONobj, 'id' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONtest( $var_JSONobj, 'type' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONtest( $var_JSONobj, 'name' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONtest( $var_JSONobj, 'ppu' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONtest( $var_JSONobj, 'batters.batter' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONtest( $var_JSONobj, 'topping' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONtest( $var_JSONobj, 'batters.batter[ 2 ].type' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONtest( $var_JSONobj, &apos;batters[&quot;batter&quot;][ 2 ].type&apos; )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONtest( $var_JSONobj, &apos;batters[ &quot;batter&quot;][ 2 ].type&apos; )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONtest( $var_JSONobj, &apos;batters[&quot;batter&quot; ][ 2 ].type&apos; )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONtest( $var_JSONobj, &apos;batters[   &quot;batter&quot;  ][ 2 ].type&apos; )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONtest( $var_JSONobj, 'batters.batter[3].id' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONtest( $var_JSONobj, 'topping[1].id' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONtest( $var_JSONobj, 'topping[   2   ].type' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONtest( $var_JSONobj, 'topping[4 ]' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONtest( $var_jsonstring, 'topping[ 5].type' )"/>
+							</arg-string>
+						</do-trace-message>
+						<do-set-local-variable name="var_JSONobj_topping" scope="policy">
+							<arg-object>
+								<token-xpath expression="es:JSONtest( $var_jsonstring, 'topping' )"/>
+							</arg-object>
+						</do-set-local-variable>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xpath expression="es:JSONstringify( es:JSONtest( $var_JSONobj_topping, '[3]' ) )"/>
+							</arg-string>
+						</do-trace-message>
+					</actions>
+				</rule>
+				<rule>
+					<description>ArrayToNodeset tests</description>
+					<comment xml:space="preserve">Requires JSONparse() to be working for these tests to be valid.</comment>
+					<conditions>
+						<and/>
+					</conditions>
+					<actions>
+						<do-set-local-variable name="var_jsonstring" notrace="true" scope="policy">
+							<arg-string>
+								<token-text xml:space="preserve">[
+    "apple",
+    "orange",
+    "avocado",
+    "tomato",
+    [
+        "None",
+        {
+            "id": "5002",
+            "type": "Glazed"
+        },
+        {
+            "id": "5005",
+            "type": "Sugar"
+        },
+        null,
+        {
+            "id": "5007",
+            "type": "Powdered Sugar"
+        },
+        "Chocolate with Sprinkles",
+        {
+            "id": "5003",
+            "type": "Chocolate"
+        }
+    ],
+    "banana",
+    {
+        "id": "1001",
+        "type": "Regular"
+    },
+    {
+        "id": "1002",
+        "type": "Chocolate"
+    },
+    {
+        "id": "1003",
+        "type": "Blueberry"
+    },
+    "mango"
+]</token-text>
+							</arg-string>
+						</do-set-local-variable>
+						<do-set-local-variable name="var_array" scope="policy">
+							<arg-object>
+								<token-xpath expression="es:JSONparse( $var_jsonstring )"/>
+							</arg-object>
+						</do-set-local-variable>
+						<do-trace-message disabled="true" level="0" notrace="true">
+							<arg-string>
+								<token-text xml:space="preserve">
+--- Expected result:
+&lt;array>
+	&lt;element>apple&lt;/element>
+	&lt;element>orange&lt;/element>
+	&lt;element>avocado&lt;/element>
+	&lt;element>tomato&lt;/element>
+	&lt;element>["None",{"id":"5002","type":"Glazed"},{"id":"5005","type":"Sugar"},null,{"id":"5007","type":"Powdered Sugar"},"Chocolate with Sprinkles",{"id":"5003","type":"Chocolate"}]&lt;/element>
+	&lt;element>banana&lt;/element>
+	&lt;element>{"id":"1001","type":"Regular"}&lt;/element>
+	&lt;element>{"id":"1002","type":"Chocolate"}&lt;/element>
+	&lt;element>{"id":"1003","type":"Blueberry"}&lt;/element>
+	&lt;element>mango&lt;/element>
+&lt;/array></token-text>
+							</arg-string>
+						</do-trace-message>
+						<do-set-local-variable name="var_ns_array" scope="policy">
+							<arg-node-set>
+								<token-xpath expression="es:arrayToNodeset( $var_array )"/>
+							</arg-node-set>
+						</do-set-local-variable>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xml-serialize>
+									<token-local-variable name="var_ns_array"/>
+								</token-xml-serialize>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message disabled="true" level="0" notrace="true">
+							<arg-string>
+								<token-text xml:space="preserve">
+--- Expected result:
+&lt;array>
+	&lt;element>None&lt;/element>
+	&lt;element>{"id":"5002","type":"Glazed"}&lt;/element>
+	&lt;element>{"id":"5005","type":"Sugar"}&lt;/element>
+	&lt;element>null&lt;/element>
+	&lt;element>{"id":"5007","type":"Powdered Sugar"}&lt;/element>
+	&lt;element>Chocolate with Sprinkles&lt;/element>
+	&lt;element>{"id":"5003","type":"Chocolate"}&lt;/element>
+&lt;/array></token-text>
+							</arg-string>
+						</do-trace-message>
+						<do-set-local-variable name="var_ns_array2" scope="policy">
+							<arg-node-set>
+								<token-xpath expression="es:arrayToNodeset( es:JSONparse( $var_ns_array/element[5] ) )"/>
+							</arg-node-set>
+						</do-set-local-variable>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xml-serialize>
+									<token-local-variable name="var_ns_array2"/>
+								</token-xml-serialize>
+							</arg-string>
+						</do-trace-message>
+						<do-trace-message disabled="true" level="0" notrace="true">
+							<arg-string>
+								<token-text xml:space="preserve">
+--- Expected result:
+&lt;array/></token-text>
+							</arg-string>
+						</do-trace-message>
+						<do-set-local-variable name="var_ns_array2" scope="policy">
+							<arg-node-set>
+								<token-xpath expression="es:arrayToNodeset( 'This is not an array' )"/>
+							</arg-node-set>
+						</do-set-local-variable>
+						<do-trace-message level="0">
+							<arg-string>
+								<token-xml-serialize>
+									<token-local-variable name="var_ns_array2"/>
+								</token-xml-serialize>
+							</arg-string>
+						</do-trace-message>
+					</actions>
+				</rule>
+			</policy>
+		</rule>
+	</children>
+</driver-configuration>
