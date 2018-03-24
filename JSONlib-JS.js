@@ -177,17 +177,17 @@ function JSONget( inputJSON, whattoget, returntype ) {
       }
       itobj = itval;
     }
-    // Inspect returned data and coerce it as needed. No deafult set since res is set at the start of the function
+    // Inspect returned data and coerce it as needed. No default set since res is set at the start of the function
     switch ( returntype ) {
         case 'string':
-            res = String( itval );
-            break;
+          res = String( itval );
+          break;
         case 'number':
-            res = parseInt( String( itval ), 10 );
-            break;
-            case 'raw':
-            res = itval;
-            break;
+          res = parseInt( String( itval ), 10 );
+          break;
+        case 'raw':
+          res = itval;
+          break;
     }
     return res;
 }
