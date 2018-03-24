@@ -335,7 +335,7 @@ Nodeset passed does not have a root &lt;instance> element with one or more child
 					<actions>
 						<do-set-local-variable name="var_parse" scope="policy">
 							<arg-object>
-								<token-xpath expression="es:JSONparse( &apos;{&quot;result&quot;:{&quot;ReturnCode&quot;:&quot;SUCCESS&quot;,&quot;Message&quot;:&quot;Request Item Created Successfully&quot;,&quot;RequestNumber&quot;:&quot;REQ0058902&quot;,&quot;RequestItemNumber&quot;:&quot;RITM0059000&quot;,&quot;ADHRequestNumber&quot;:&quot;e829f03052a042cc903a2dbf6f4a042f&quot;}}&apos; )"/>
+								<token-xpath expression="es:JSONparse( &apos;{&quot;result&quot;:{&quot;ReturnCode&quot;:&quot;SUCCESS&quot;,&quot;Message&quot;:&quot;Request Item Created Successfully&quot;,&quot;RequestNumber&quot;:&quot;REQ99999999&quot;,&quot;RequestItemNumber&quot;:&quot;RITM99999999&quot;,&quot;TestRequestNumber&quot;:&quot;abcdef1234567890abcdef1234567890&quot;}}&apos; )"/>
 							</arg-object>
 						</do-set-local-variable>
 						<do-set-local-variable name="var_stringify" scope="policy">
