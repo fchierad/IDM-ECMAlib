@@ -237,7 +237,7 @@ function JSONtest( inputJSON, whattotest ) {
  * @version 1.0.0
  * @since 1.0.0
  *
- * @param  {array}  ECMA array
+ * @param  {array}  arr   ECMA array
  *
  * @return {nodeset} xml nodeset with the data provided in the array. The nodeset structure will be:
  * <array>
@@ -300,7 +300,7 @@ function arrayToNodeset( arr ) {
  *
  * @param  {nodeset}  instnodeset    Nodeset local variable from DirXML Policy
  * @param  {string=}  [returntype]   (optional) return type - ECMA object 'object' or Serialized JSON object 'serialized'
- *                                   If ommited will default to 'serialized'
+ *                                   If omitted will default to 'serialized'
  *
   * @return {(string|object)} Serialized JSON string | ECMA Object
  */

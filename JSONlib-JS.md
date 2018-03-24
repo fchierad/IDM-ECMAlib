@@ -25,7 +25,7 @@ Note: To reference properties with a dot in their name use the format [&quot;pro
 <dd><p>Verify if an ECMA object has the selected location.
 Note: To reference properties with a dot in their name use the format [&quot;property.name&quot;]</p>
 </dd>
-<dt><a href="#arrayToNodeset">arrayToNodeset(ECMA)</a> ⇒ <code>nodeset</code></dt>
+<dt><a href="#arrayToNodeset">arrayToNodeset(arr)</a> ⇒ <code>nodeset</code></dt>
 <dd><p>Returns a nodeset with the contents of the provided ECMA array serialized into strings.</p>
 </dd>
 <dt><a href="#instanceXMLtoJSON">instanceXMLtoJSON(instnodeset, [returntype])</a> ⇒ <code>string</code> | <code>object</code></dt>
@@ -124,7 +124,7 @@ Verify if an ECMA object has the selected location.Note: To reference propertie
 
 <a name="arrayToNodeset"></a>
 
-## arrayToNodeset(ECMA) ⇒ <code>nodeset</code>
+## arrayToNodeset(arr) ⇒ <code>nodeset</code>
 Returns a nodeset with the contents of the provided ECMA array serialized into strings.
 
 **Kind**: global function  
@@ -134,7 +134,7 @@ Returns a nodeset with the contents of the provided ECMA array serialized into s
 
 | Param | Type | Description |
 | --- | --- | --- |
-| ECMA | <code>array</code> | array |
+| arr | <code>array</code> | ECMA array |
 
 <a name="instanceXMLtoJSON"></a>
 
@@ -149,5 +149,5 @@ Parse a nodeset with an <instance> query result and returns 1 level JSON with th
 | Param | Type | Description |
 | --- | --- | --- |
 | instnodeset | <code>nodeset</code> | Nodeset local variable from DirXML Policy |
-| [returntype] | <code>string</code> | (optional) return type - ECMA object 'object' or Serialized JSON object 'serialized'                                   If ommited will default to 'serialized' |
+| [returntype] | <code>string</code> | (optional) return type - ECMA object 'object' or Serialized JSON object 'serialized'                                   If omitted will default to 'serialized' |
 
