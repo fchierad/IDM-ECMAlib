@@ -1,11 +1,13 @@
 ## Functions
 
 <dl>
-<dt><a href="#JSONparse">JSONparse(s)</a> ⇒ <code>object</code></dt>
-<dd><p>Wrapper for the JSON.parse() call</p>
+<dt><a href="#JSONparse">JSONparse(s, [reviver])</a> ⇒ <code>object</code></dt>
+<dd><p>Wrapper for the JSON.parse() call
+See <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse</a></p>
 </dd>
-<dt><a href="#JSONstringify">JSONstringify(o)</a> ⇒ <code>string</code></dt>
-<dd><p>Wrapper for the JSON.stringify() call</p>
+<dt><a href="#JSONstringify">JSONstringify(o, [replacer], [space])</a> ⇒ <code>string</code></dt>
+<dd><p>Wrapper for the JSON.stringify() call
+See <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify</a></p>
 </dd>
 <dt><a href="#stringToCharArray">stringToCharArray(str)</a> ⇒ <code>Array.&lt;string&gt;</code></dt>
 <dd><p>Unicode-safe split of a string to a character Array.</p>
@@ -28,7 +30,7 @@ Note: To reference properties with a dot in their name use the format [&quot;pro
 <dt><a href="#arrayToNodeset">arrayToNodeset(arr)</a> ⇒ <code>nodeset</code></dt>
 <dd><p>Returns a nodeset with the contents of the provided ECMA array serialized into strings.</p>
 </dd>
-<dt><a href="#instanceXMLtoJSON">instanceXMLtoJSON(instnodeset, [returntype])</a> ⇒ <code>string</code> | <code>object</code></dt>
+<dt><a href="#instanceXMLtoJSON">instanceXMLtoJSON(instnodeset, [returntype], [buildstructure], [inserttype])</a> ⇒ <code>string</code> | <code>object</code></dt>
 <dd><p>Parse a nodeset with an <instance> query result and returns 1 level JSON with the attribute names as object properties
 and the attribute value as their values. Multi-valued attributes will result in an array of values assigned to the JSON property.
 This iteration does not handle structured attributes</p>
@@ -37,31 +39,34 @@ This iteration does not handle structured attributes</p>
 
 <a name="JSONparse"></a>
 
-## JSONparse(s) ⇒ <code>object</code>
-Wrapper for the JSON.parse() call
+## JSONparse(s, [reviver]) ⇒ <code>object</code>
+Wrapper for the JSON.parse() callSee https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse
 
 **Kind**: global function  
 **Returns**: <code>object</code> - ECMA Object generated from the JSON string  
 **Since**: 1.0.0  
-**Version**: 1.0.0  
+**Version**: 1.0.1  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | s | <code>string</code> | String with valid JSON syntax |
+| [reviver] | <code>function</code> | (Optional) If a function, this prescribes how the value originally produced by parsing is transformed, before being returned. |
 
 <a name="JSONstringify"></a>
 
-## JSONstringify(o) ⇒ <code>string</code>
-Wrapper for the JSON.stringify() call
+## JSONstringify(o, [replacer], [space]) ⇒ <code>string</code>
+Wrapper for the JSON.stringify() callSee https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
 
 **Kind**: global function  
 **Returns**: <code>string</code> - Serialized ECMA object in JSON format  
 **Since**: 1.0.0  
-**Version**: 1.0.0  
+**Version**: 1.0.1  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | o | <code>object</code> | ECMA object to convert to JSON |
+| [replacer] | <code>function</code> \| <code>Array.&lt;string&gt;</code> \| <code>Array.&lt;number&gt;</code> | (Optional) A function that alters the behavior of the stringification process, or an array of String and Number objects that serve as a whitelist for selecting/filtering the properties of the value object to be included in the JSON string. If this value is null or not provided, all properties of the object are included in the resulting JSON string |
+| [space] | <code>string</code> \| <code>number</code> | (Optional) A String or Number object that's used to insert white space into the output JSON string for readability purposes. If this is a Number, it indicates the number of space characters to use as white space; this number is capped at 10 (if it is greater, the value is just 10). Values less than 1 indicate that no space should be used. If this is a String, the string (or the first 10 characters of the string, if it's longer than that) is used as white space. If this parameter is not provided (or is null), no white space is used. |
 
 <a name="stringToCharArray"></a>
 
@@ -128,7 +133,7 @@ Verify if an ECMA object has the selected location.Note: To reference propertie
 Returns a nodeset with the contents of the provided ECMA array serialized into strings.
 
 **Kind**: global function  
-**Returns**: <code>nodeset</code> - xml nodeset with the data provided in the array. The nodeset structure will be:<array>  <element></element>  ...</array>Where  each element's content will be a string representation of the array element.Whenever the array element being parsed is an object or other arrays their representation will be built by using JSON.stringify() on the element.  
+**Returns**: <code>nodeset</code> - xml nodeset with the data provided in the array.                  The nodeset root node will be 'array', with zero or more child 'element' nodes.                  Each element node will have a child text node with a string representation of the array element.                  Whenever the array element being parsed is an object or other arrays their representation will be built                  by using JSON.stringify() on the element.  
 **Since**: 1.0.0  
 **Version**: 1.0.0  
 
@@ -138,16 +143,18 @@ Returns a nodeset with the contents of the provided ECMA array serialized into s
 
 <a name="instanceXMLtoJSON"></a>
 
-## instanceXMLtoJSON(instnodeset, [returntype]) ⇒ <code>string</code> \| <code>object</code>
+## instanceXMLtoJSON(instnodeset, [returntype], [buildstructure], [inserttype]) ⇒ <code>string</code> \| <code>object</code>
 Parse a nodeset with an <instance> query result and returns 1 level JSON with the attribute names as object propertiesand the attribute value as their values. Multi-valued attributes will result in an array of values assigned to the JSON property.This iteration does not handle structured attributes
 
 **Kind**: global function  
 **Returns**: <code>string</code> \| <code>object</code> - Serialized JSON string | ECMA Object  
 **Since**: 1.0.0  
-**Version**: 1.0.0  
+**Version**: 1.0.1  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | instnodeset | <code>nodeset</code> | Nodeset local variable from DirXML Policy |
-| [returntype] | <code>string</code> | (optional) return type - ECMA object 'object' or Serialized JSON object 'serialized'                                   If omitted will default to 'serialized' |
+| [returntype] | <code>string</code> | (Optional) return type - ECMA object 'object' or Serialized JSON object 'serialized'. If omitted will default to 'serialized' |
+| [buildstructure] | <code>string</code> | (Optional) Dot-separated list of properties to be created as part of the returned object.                                      The object will be added as a property of the last location provided.                                      If omitted the object will be returned by itself. Current iteration does not build arrays from [0]. |
+| [inserttype] | <code>string</code> | (Optional) 'value' or 'list'. Defaults to 'value' if omitted. 'list' wraps the object generated from the instance XML document in an array. |
 

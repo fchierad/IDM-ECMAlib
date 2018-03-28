@@ -1,6 +1,7 @@
 /**
- * @fileoverview Custom ECMA Library contains extension functions for use with Novell Identity Manager drivers.
- * @version 1.0.0
+ * @fileoverview Custom ECMA Library contains extension functions for use with NetIQ Identity Manager drivers. Requires IDM 4.5 or later.
+ *               Latest version available at https://github.com/fchierad/IDM-ECMAlib
+ * @version 1.0.1
  */
 
 // Object declaration on the global scope to allow all functions in this library to issue driver trace commands with logmsg.trace( message, level );
@@ -10,17 +11,19 @@ var logmsg = new Packages.com.novell.nds.dirxml.driver.Trace( 'ECMA debug' );
 
 /**
  * Wrapper for the JSON.parse() call
- * @version 1.0.0
+ * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse
+ * @version 1.0.1
  * @since 1.0.0
  *
- * @param {string}  s   String with valid JSON syntax
+ * @param {string}     s          String with valid JSON syntax
+ * @param {function=}  [reviver] (Optional) If a function, this prescribes how the value originally produced by parsing is transformed, before being returned.
  *
- * @return {object}ECMA Object generated from the JSON string
+ * @return {object} ECMA Object generated from the JSON string
  */
-function JSONparse( s ) {
+function JSONparse( s, reviver ) {
   var JSONobj = {};
   try {
-    JSONobj = JSON.parse( s );
+    JSONobj = JSON.parse( s, reviver );
   } catch( e ) {
     logmsg.trace( ' JSONparse(): Failed to parse input string: ' + e.message, 5 );
   }
@@ -29,17 +32,20 @@ function JSONparse( s ) {
 
 /**
  * Wrapper for the JSON.stringify() call
- * @version 1.0.0
+ * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
+ * @version 1.0.1
  * @since 1.0.0
  *
- * @param {object}  o   ECMA object to convert to JSON
+ * @param {object}                        o           ECMA object to convert to JSON
+ * @param {(function|string[]|number[])=} [replacer]  (Optional) A function that alters the behavior of the stringification process, or an array of String and Number objects that serve as a whitelist for selecting/filtering the properties of the value object to be included in the JSON string. If this value is null or not provided, all properties of the object are included in the resulting JSON string
+ * @param {(string|number)=}              [space]     (Optional) A String or Number object that's used to insert white space into the output JSON string for readability purposes. If this is a Number, it indicates the number of space characters to use as white space; this number is capped at 10 (if it is greater, the value is just 10). Values less than 1 indicate that no space should be used. If this is a String, the string (or the first 10 characters of the string, if it's longer than that) is used as white space. If this parameter is not provided (or is null), no white space is used.
  *
  * @return {string} Serialized ECMA object in JSON format
  */
-function JSONstringify( o ) {
+function JSONstringify( o, replacer, space ) {
   var str = '';
   try {
-    str = JSON.stringify( o );
+    str = JSON.stringify( o, replacer, space );
   } catch( e ) {
     logmsg.trace( ' JSONstringify(): Failed to stringify input object: ' + e.message, 5 );
   }
@@ -142,8 +148,8 @@ function charArrToPropertyNames( cArr ) {
  * @version 1.0.0
  * @since 1.0.0
  *
- * @param {(object|string)}  inputJSON   Input JSON (ECMA object). If a string-serialized JSON is provided it will be converted to a JSON object internally
- * @param {string}           whattoget   Dot-separated list of properties as if you are accessing them via ECMAscript
+ * @param {(object|string)}  inputJSON     Input JSON (ECMA object). If a string-serialized JSON is provided it will be converted to a JSON object internally
+ * @param {string}           whattoget     Dot-separated list of properties as if you are accessing them via ECMAscript
  * @param {string=}          [returntype]  (Optional) Desired return type. Valid values are: string, number, raw. Defaults to raw in case whatever is provided is not one of the 3 valid options
  *
  * @return {(string|number|boolean|object)} Selected property's value in the selected format. If parsing of the object fails returns an empty string
@@ -237,16 +243,13 @@ function JSONtest( inputJSON, whattotest ) {
  * @version 1.0.0
  * @since 1.0.0
  *
- * @param  {array}  arr   ECMA array
+ * @param {array}  arr   ECMA array
  *
- * @return {nodeset} xml nodeset with the data provided in the array. The nodeset structure will be:
- * <array>
- *   <element></element>
- *   ...
- * </array>
- * Where  each element's content will be a string representation of the array element.
- * Whenever the array element being parsed is an object or other arrays their representation will be built
- *  by using JSON.stringify() on the element.
+ * @return {nodeset} xml nodeset with the data provided in the array.
+ *                   The nodeset root node will be 'array', with zero or more child 'element' nodes.
+ *                   Each element node will have a child text node with a string representation of the array element.
+ *                   Whenever the array element being parsed is an object or other arrays their representation will be built
+ *                   by using JSON.stringify() on the element.
  */
 function arrayToNodeset( arr ) {
     var i, doc, ns, xmlroot, xmlnode, xmltext;
@@ -295,30 +298,29 @@ function arrayToNodeset( arr ) {
  * Parse a nodeset with an <instance> query result and returns 1 level JSON with the attribute names as object properties
  * and the attribute value as their values. Multi-valued attributes will result in an array of values assigned to the JSON property.
  * This iteration does not handle structured attributes
- * @version 1.0.0
+ * @version 1.0.1
  * @since 1.0.0
  *
- * @param  {nodeset}  instnodeset    Nodeset local variable from DirXML Policy
- * @param  {string=}  [returntype]   (optional) return type - ECMA object 'object' or Serialized JSON object 'serialized'
- *                                   If omitted will default to 'serialized'
+ * @param {nodeset}  instnodeset      Nodeset local variable from DirXML Policy
+ * @param {string=}  [returntype]     (Optional) return type - ECMA object 'object' or Serialized JSON object 'serialized'. If omitted will default to 'serialized'
+ * @param {string=}  [buildstructure] (Optional) Dot-separated list of properties to be created as part of the returned object.
+ *                                      The object will be added as a property of the last location provided.
+ *                                      If omitted the object will be returned by itself. Current iteration does not build arrays from [0].
+ * @param {string=}  [inserttype]     (Optional) 'value' or 'list'. Defaults to 'value' if omitted. 'list' wraps the object generated from the instance XML document in an array.
  *
-  * @return {(string|object)} Serialized JSON string | ECMA Object
+ * @return {(string|object)} Serialized JSON string | ECMA Object
  */
-function instanceXMLtoJSON( instnodeset, returntype ) {
-    /* base XML will have multiple nodes in the format <attr attr-name="name"><value>attribute value</value></attr>
-     * conversion does peek at the @type attribute of the value element. number and string are treated as such,
-     * any other types currently are coerced into strings
-     */
-    var ret = null, retObj = {}, i, j, rettype,topnode, attrname, attrvalue, attrtype, attrArr, valueArr;
+function instanceXMLtoJSON( instnodeset, returntype, buildstructure, inserttype ) {
+  /* base XML will have multiple nodes in the format <attr attr-name="name"><value>attribute value</value></attr>
+    * conversion does peek at the @type attribute of the value element. number and string are treated as such,
+    * any other types currently are coerced into strings
+    */
+  var ret = null, retObj = {}, retObjS2 = {}, retObjS3 = {}, i, j,
+    topnode, attrname, attrvalue, attrtype, attrArr, valueArr, putArr, cur, lastProp;
 
-    if ( typeof instnodeset != 'object' ) {
-      return 'Function parameter need to be a local variable of the type NodeSet';
-    }
-
-    rettype = String( returntype ).toLowerCase();
-    if ( rettype !== 'object' && rettype !== 'serialized' ) {
-      rettype = 'serialized';
-    }
+  if ( typeof instnodeset != 'object' ) {
+    return 'Function parameter need to be a local variable of the type NodeSet';
+  }
 
   try {
         topnode = instnodeset.first();
@@ -388,16 +390,34 @@ function instanceXMLtoJSON( instnodeset, returntype ) {
     return 'Nodeset passed does not have a root <instance> element with one or more child <attr> nodes.';
   }
 
-    switch ( rettype ) {
-        case 'object':
-            ret = retObj;
-            break;
-        case 'serialized':
-            ret = JSONstringify( retObj );
-            break;
-        default:
-            // Just to guarantee we always have a return. This was the original return for the function
-            ret = JSONstringify( retObj );
+  if ( inserttype === 'list' ) {
+    retObjS2 = [ retObj ];
+  } else { // Anything other than list will default to 'value'
+    retObjS2 = retObj;
+  }
+
+  if ( typeof buildstructure === 'string' ) {
+    putArr = charArrToPropertyNames( stringToCharArray( buildstructure ) );
+    if ( putArr.length > 0 ) {
+      lastProp = putArr.pop();
+      cur = retObjS3;
+      putArr.forEach( function buildObjectStructure( property ) {
+        cur[ property ] = {};
+        cur = cur[ property ];
+      });
+      cur[ lastProp ] = retObjS2; // At this point retObjS3 will have the whole structure.
+    } else {
+      retObjS3 = retObjS2;
     }
-    return ret;
+  } else { // If buildstructure is empty pass through
+    retObjS3 = retObjS2;
+  }
+
+  if ( String( returntype ).toLowerCase() === 'object' ) {
+    ret = retObjS3;
+  } else { // If returntype is not 'object' defaults to 'serialized'
+    ret = JSONstringify( retObjS3 );
+  }
+
+  return ret;
 }
