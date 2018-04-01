@@ -35,6 +35,19 @@ Note: To reference properties with a dot in their name use the format [&quot;pro
 and the attribute value as their values. Multi-valued attributes will result in an array of values assigned to the JSON property.
 This iteration does not handle structured attributes</p>
 </dd>
+<dt><a href="#attr2obj">attr2obj(el)</a> ⇒ <code>object</code></dt>
+<dd><p>Parses the attr node and returns an ECMA object with its structure</p>
+</dd>
+<dt><a href="#attrvalue2obj">attrvalue2obj(nl)</a> ⇒ <code>string</code> | <code>number</code> | <code>boolean</code> | <code>object</code></dt>
+<dd><p>Parses the attr/value node and returns an ECMA object with its structure</p>
+</dd>
+<dt><a href="#valuecomponent2obj">valuecomponent2obj(nl)</a> ⇒ <code>object</code></dt>
+<dd><p>Parses the value/component node and returns an ECMA object with its structure</p>
+</dd>
+<dt><a href="#nodesetLV2ElementImpl">nodesetLV2ElementImpl(ns)</a> ⇒ <code>null</code> | <code>com.novell.xml.dom.ElementImpl</code></dt>
+<dd><p>Parses the main node and returns the node if it is not a #document node.
+If it is a document node, navigates one level down to obtain the ElementImpl node.</p>
+</dd>
 </dl>
 
 <a name="JSONparse"></a>
@@ -149,12 +162,68 @@ Parse a nodeset with an <instance> query result and returns 1 level JSON with th
 **Kind**: global function  
 **Returns**: <code>string</code> \| <code>object</code> - Serialized JSON string | ECMA Object  
 **Since**: 1.0.0  
-**Version**: 1.0.1  
+**Version**: 1.0.2  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| instnodeset | <code>nodeset</code> | Nodeset local variable from DirXML Policy |
+| instnodeset | <code>com.novell.xml.xpath.InsertionOrderNodeSet</code> | Nodeset local variable from DirXML Policy |
 | [returntype] | <code>string</code> | (Optional) return type - ECMA object 'object' or Serialized JSON object 'serialized'. If omitted will default to 'serialized' |
-| [buildstructure] | <code>string</code> | (Optional) Dot-separated list of properties to be created as part of the returned object.                                      The object will be added as a property of the last location provided.                                      If omitted the object will be returned by itself. Current iteration does not build arrays from [0]. |
-| [inserttype] | <code>string</code> | (Optional) 'value' or 'list'. Defaults to 'value' if omitted. 'list' wraps the object generated from the instance XML document in an array. |
+| [buildstructure] | <code>string</code> | (Optional) Dot-separated list of properties to be created as part of the returned object.                                      The object will be added as a property of the last location provided.                                      If omitted the object will be returned by itself. Use the advsyntax parameter to expand parsing of this structure. |
+| [inserttype] | <code>string</code> | (Optional) 'value', 'list' or 'advanced'. Defaults to 'value' if omitted.                                     'list' wraps the object generated from the instance XML document in an array, kept for backwards compatibility.                                     'advanced' causes the parsing of the buildstructure to look for :value, :list at the end of of a property name,                                      then uses those indicators to build the parsed structure to append the converted instance XML to. |
+
+<a name="attr2obj"></a>
+
+## attr2obj(el) ⇒ <code>object</code>
+Parses the attr node and returns an ECMA object with its structure
+
+**Kind**: global function  
+**Returns**: <code>object</code> - ECMA Object generated from the parsed attr node.  
+**Since**: 1.0.2  
+**Version**: 1.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| el | <code>com.novell.xml.dom.ElementImpl</code> | Attribute node from an instance XML |
+
+<a name="attrvalue2obj"></a>
+
+## attrvalue2obj(nl) ⇒ <code>string</code> \| <code>number</code> \| <code>boolean</code> \| <code>object</code>
+Parses the attr/value node and returns an ECMA object with its structure
+
+**Kind**: global function  
+**Returns**: <code>string</code> \| <code>number</code> \| <code>boolean</code> \| <code>object</code> - ECMA primitives or object generated from the parsed attr/value node.  
+**Since**: 1.0.2  
+**Version**: 1.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| nl | <code>com.novell.xml.dom.TagNameNodeList</code> | Value node list |
+
+<a name="valuecomponent2obj"></a>
+
+## valuecomponent2obj(nl) ⇒ <code>object</code>
+Parses the value/component node and returns an ECMA object with its structure
+
+**Kind**: global function  
+**Returns**: <code>object</code> - ECMA object generated from the parsed value/component nodes.  
+**Since**: 1.0.2  
+**Version**: 1.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| nl | <code>com.novell.xml.dom.TagNameNodeList</code> | Component node list |
+
+<a name="nodesetLV2ElementImpl"></a>
+
+## nodesetLV2ElementImpl(ns) ⇒ <code>null</code> \| <code>com.novell.xml.dom.ElementImpl</code>
+Parses the main node and returns the node if it is not a #document node.If it is a document node, navigates one level down to obtain the ElementImpl node.
+
+**Kind**: global function  
+**Returns**: <code>null</code> \| <code>com.novell.xml.dom.ElementImpl</code> - First ElementImpl object under the InsertionOrderNodeSet. returns null if the parsing failed.  
+**Since**: 1.0.2  
+**Version**: 1.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| ns | <code>com.novell.xml.xpath.InsertionOrderNodeSet</code> | Local Variable of type nodeset built in DirXML-Script |
 
