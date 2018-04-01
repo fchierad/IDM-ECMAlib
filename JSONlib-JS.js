@@ -201,7 +201,7 @@ function JSONget( inputJSON, whattoget, returntype ) {
 /**
  * Verify if an ECMA object has the selected location.
  * Note: To reference properties with a dot in their name use the format ["property.name"]
- * @version 1.0.0
+ * @version 1.0.2
  * @since 1.0.0
  *
  * @param {(object|string)}  inputJSON    Input JSON (ECMA object). If a string-serialized JSON is provided it will be converted to a JSON object internally
@@ -226,7 +226,7 @@ function JSONtest( inputJSON, whattotest ) {
   itobj = JSONobj;
   for( i = 0; i < getArr.length; i++ ) {
     propName = getArr[ i ];
-    logmsg.trace( ' JSONget(): Parsing: "' + propName + '", type: ' + typeof propName, 5 );
+    logmsg.trace( ' JSONtest(): Parsing: "' + propName + '", type: ' + typeof propName, 5 );
     if ( typeof itobj === 'object' && propName in itobj ) {
       itval = itobj[ propName ];
     } else {
