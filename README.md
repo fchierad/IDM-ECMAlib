@@ -6,3 +6,5 @@ Collection of ECMAscript functions created for use inside NetIQ Identity Manager
 * JSONlib-JS.md: ECMAscript functions documentation
 
 v1.0.2: Major refactoring of instanceXMLtoJSON(), broken many of its internals in smaller, specialized functions to improve code maintainability and allow for easier future expansion of the same. Some of these functions could potentially be reused in other functions to deal with other XDS document types. Implemented support for structured attributes as well as unit tests for the same. Added additional syntax for generating more complex object structures to place the object resulting from converting the instance XML.
+
+For a Designer package with this code please add this URL to your Designer online update repositories: http://exatas.com/IDMpackages/public/
